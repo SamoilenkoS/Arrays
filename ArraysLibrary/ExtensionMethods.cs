@@ -23,10 +23,5 @@ namespace ArraysLibrary
         {
             return num % 2 == 0;
         }
-
-        public static bool Test(this AnimalCreator animalCreator)
-        {
-            return true;
-        }
     }
 }

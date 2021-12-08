@@ -22,7 +22,14 @@ namespace ArraysLibrary
 
         public bool Equals([AllowNull] Cat other)
         {
-            return other != null && other.Age == Age && other.Color == Color;
+            return other != null 
+                && other.Age == Age
+                && other.Color == Color;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Age, Color);
         }
     }
 }

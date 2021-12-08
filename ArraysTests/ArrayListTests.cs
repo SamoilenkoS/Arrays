@@ -1,5 +1,6 @@
 using ArraysLibrary;
 using NUnit.Framework;
+using System;
 using System.IO;
 
 namespace ArraysTests
@@ -128,7 +129,6 @@ namespace ArraysTests
             Assert.AreEqual(expectedArray, _arrayList.ToArray());
         }
 
-
         [TestCase(new int[] { },
             1,
             0,
@@ -156,6 +156,104 @@ namespace ArraysTests
             _arrayList.AddByIndex(index, elementToAdd);
 
             Assert.AreEqual(expectedArray, _arrayList.ToArray());
+        }
+
+        [TestCase(new[] { 1 }, 0, 1, new int[] { })]
+        [TestCase(new int[] { 5, 2, 3 }, 0, 5, new[] { 2, 3 })]
+        [TestCase(new int[] { 1, 2, 3, 4 }, 2, 3, new[] { 1, 2, 4 })]
+        [TestCase(new int[] { 1, 2, 3, 4, 5 }, 4, 5, new[] { 1, 2, 3, 4 })]
+        public void RemoveByIndex_WhenValidIndex_ShouldRemoveElementByIndex(
+            int[] sourceArray,
+            int indexToDelete,
+            int expectedDeleted,
+            int[] expectedArray)
+        {
+            Initialize(sourceArray);
+
+            int actualDeleted =
+                _arrayList.RemoveByIndex(indexToDelete);
+
+            Assert.AreEqual(expectedArray, _arrayList.ToArray());
+            Assert.AreEqual(expectedDeleted, actualDeleted);
+        }
+
+        [TestCase(new[] { 1 }, 1, new int[] { })]
+        [TestCase(new int[] { 5, 2, 3 }, 5, new[] { 2, 3 })]
+        [TestCase(new int[] { 3, 2, 3, 4 }, 3, new[] { 2, 3, 4 })]
+        [TestCase(new int[] { 8, 2, 3, 4, 5 }, 8, new[] { 2, 3, 4, 5 })]
+        public void RemoveFront_WhenValidIndex_ShouldRemoveFirstElement(
+            int[] sourceArray,
+            int expectedDeleted,
+            int[] expectedArray)
+        {
+            Initialize(sourceArray);
+
+            int actualDeleted =
+                _arrayList.RemoveFront();
+
+            Assert.AreEqual(expectedArray, _arrayList.ToArray());
+            Assert.AreEqual(expectedDeleted, actualDeleted);
+        }
+
+        [TestCase(new[] { 1 }, 1, new int[] { })]
+        [TestCase(new int[] { 5, 2, 3 }, 3, new[] { 5, 2 })]
+        [TestCase(new int[] { 3, 2, 3, 4 }, 4, new[] { 3, 2, 3 })]
+        [TestCase(new int[] { 8, 2, 3, 4, 5 }, 5, new[] { 8, 2, 3, 4 })]
+        public void RemoveBack_WhenValidIndex_ShouldRemoveFirstElement(
+            int[] sourceArray,
+            int expectedDeleted,
+            int[] expectedArray)
+        {
+            Initialize(sourceArray);
+
+            int actualDeleted =
+                _arrayList.RemoveBack();
+
+            Assert.AreEqual(expectedArray, _arrayList.ToArray());
+            Assert.AreEqual(expectedDeleted, actualDeleted);
+        }
+
+        [TestCase(new[] { 1 }, 1, 0, new[] { 1 }, new int[] { })]
+        [TestCase(new int[] { 5, 2, 3 }, 2, 0, new[] { 5, 2 }, new[] { 3 })]
+        [TestCase(new int[] { 1, 2, 3, 4, 5, 6, 7, 8 },
+            3, 2,
+            new[] { 3, 4, 5 }, new[] { 1, 2, 6, 7, 8 })]
+        [TestCase(new int[] { 1, 2, 3, 4, 5},
+            3, 2,
+            new[] { 3, 4, 5 }, new[] { 1, 2 })]
+        public void RemoveCountByIndex_WhenValidInput_ShouldRemoveCountElementStartingFromIndex(
+            int[] sourceArray,
+            int count,
+            int index,
+            int[] expectedDeleted,
+            int[] expectedArray)
+        {
+            Initialize(sourceArray);
+
+            int[] actualDeleted =
+                _arrayList.RemoveByIndex(index, count);
+
+            Assert.AreEqual(expectedDeleted, actualDeleted);
+            Assert.AreEqual(expectedArray, _arrayList.ToArray());
+        }
+
+        [Test]
+        public void RemoveBack_WhenInvalidIndex_ShouldThrowArgumentException()
+        {
+            Initialize(new int[] { });
+
+            try
+            {
+                _arrayList.RemoveBack();
+            }
+            catch(ArgumentException ex)
+            {
+                Assert.AreEqual("Array is empty or index is incorrect!",
+                    ex.Message);
+                Assert.Pass();
+            }
+
+            Assert.Fail();
         }
     }
 }

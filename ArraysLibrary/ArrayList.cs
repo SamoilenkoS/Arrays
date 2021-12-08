@@ -167,27 +167,32 @@ namespace ArraysLibrary
             return minI;
         }
 
-        public void Print()
-        {
-            for (int i = 0; i < _currentCount; i++)
-            {
-                Console.Write($"{_array[i]} ");
-            }
-        }
-
         public int RemoveFront()
-        {
-            throw new NotImplementedException();
-        }
+            => RemoveByIndex(0);
 
         public int RemoveBack()
-        {
-            throw new NotImplementedException();
-        }
+            => RemoveByIndex(_currentCount - 1);
 
         public int RemoveByIndex(int index)
         {
-            throw new NotImplementedException();
+            int result;
+            try
+            {
+                result = this[index];
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                throw new ArgumentException(
+                    "Array is empty or index is incorrect!");
+            }
+            for (int i = index; i < _currentCount - 1; i++)
+            {
+                _array[i] = _array[i + 1];
+            }
+
+            --_currentCount;
+
+            return result;
         }
 
         public int[] RemoveFront(int count)
@@ -202,7 +207,24 @@ namespace ArraysLibrary
 
         public int[] RemoveByIndex(int index, int count)
         {
-            throw new NotImplementedException();
+            int[] result = new int[count];
+            if((index + count) > _currentCount)
+            {
+                throw new ArgumentException("Invalid index or count!");
+            }
+
+            for (int i = index, j = 0; j < count; i++, j++)
+            {
+                result[j] = _array[i];
+            }
+            for (int i = index; i < _currentCount - count; i++)
+            {
+                _array[i] = _array[i + count];
+            }
+
+            _currentCount -= count;
+
+            return result;
         }
 
         public int IndexOf(int element)
