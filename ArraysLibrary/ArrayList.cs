@@ -35,30 +35,55 @@ namespace ArraysLibrary
             _currentCount = 0;
         }
 
-        public void Add(int number)
+        public ArrayList(int[] array)
         {
-            if (_currentCount != _array.Length)
-            {
-                _array[_currentCount] = number;
-            }
-            else
-            {
-                int[] newArray = new int[(int)(_array.Length * 1.33)];
-                for (int i = 0; i < _array.Length; i++)
-                {
-                    newArray[i] = _array[i];
-                }
+            int size = (int)(array.Length * 1.33);
+            _array = new int[size];
+            _currentCount = array.Length;
 
-                newArray[_currentCount] = number;
-                _array = newArray;
+            for (int i = 0; i < _currentCount; i++)
+            {
+                _array[i] = array[i];
             }
-
-            ++_currentCount;
         }
 
-        public void Add(int[] array)
+        public void AddFront(int element)
         {
-            //
+            AddByIndex(0, element);
+        }
+
+        public void AddBack(int element)
+        {
+            UpdateSize();
+
+            _array[_currentCount++] = element;
+        }
+
+        public void AddByIndex(int index, int element)
+        {
+            UpdateSize();
+
+            for (int i = _currentCount; i > index; i--)
+            {
+                _array[i] = _array[i - 1];
+            }
+
+            _array[index] = element;
+
+            _currentCount++;
+        }
+
+        public void AddBack(IArrayList arrayList)
+        {
+            var array = arrayList.ToArray();
+            UpdateSize(array.Length);
+
+            for (int i = _currentCount, j = 0; j < array.Length; i++, j++)
+            {
+                _array[i] = array[j];
+            }
+
+            _currentCount += array.Length;
         }
 
         public int DeleteByValue(int value)
@@ -84,7 +109,62 @@ namespace ArraysLibrary
 
         public int Max()
         {
-            return 0;
+            int maxI = MaxI();
+            if(maxI == -1)
+            {
+                throw new ArgumentException("Array is empty!");
+            }
+
+            return _array[maxI];
+        }
+
+        public int MaxI()
+        {
+            if (_currentCount == 0)
+            {
+                return -1;
+            }
+
+            int maxI = 0;
+            for (int i = 1; i < _currentCount; i++)
+            {
+                if (_array[maxI] < _array[i])
+                {
+                    maxI = i;
+                }
+            }
+
+            return maxI;
+        }
+
+        public int Min()
+        {
+            int minI = MinI();
+            if (minI == -1)
+            {
+                throw new ArgumentException("Array is empty!");
+            }
+
+            return _array[minI];
+        }
+
+        public int MinI()
+        {
+            if (_currentCount == 0)
+            {
+                return -1;
+            }
+
+            int minI = 0;
+            for (int i = 1; i < _currentCount; i++)
+            {
+                if (_array[minI] > _array[i])
+                {
+                    minI = i;
+                }
+            }
+
+            return minI;
         }
 
         public void Print()
@@ -93,21 +173,6 @@ namespace ArraysLibrary
             {
                 Console.Write($"{_array[i]} ");
             }
-        }
-
-        public void AddFront(int element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddBack(int element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddByIndex(int index, int element)
-        {
-            throw new NotImplementedException();
         }
 
         public int RemoveFront()
@@ -142,25 +207,20 @@ namespace ArraysLibrary
 
         public int IndexOf(int element)
         {
-            throw new NotImplementedException();
+            int result = -1;
+            for (int i = 0; i < _currentCount; i++)
+            {
+                if(_array[i] == element)
+                {
+                    result = i;
+                    break;
+                }
+            }
+
+            return result;
         }
 
         public void Reverse()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Min()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int MaxI()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int MinI()
         {
             throw new NotImplementedException();
         }
@@ -185,11 +245,6 @@ namespace ArraysLibrary
             throw new NotImplementedException();
         }
 
-        public void AddBack(IArrayList arrayList)
-        {
-            throw new NotImplementedException();
-        }
-
         public void AddByIndex(int index, IArrayList arrayList)
         {
             throw new NotImplementedException();
@@ -206,6 +261,32 @@ namespace ArraysLibrary
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public int[] ToArray()
+        {
+            int[] result = new int[Length];
+            for (int i = 0; i < Length; i++)
+            {
+                result[i] = _array[i];
+            }
+
+            return result;
+        }
+
+        private void UpdateSize(int countToAdd = 1)
+        {
+            if ((_currentCount + countToAdd) >= _array.Length)
+            {
+                int newSize = (int)((_array.Length + countToAdd) * 1.33);
+                int[] newArray = new int[newSize];
+                for (int i = 0; i < _currentCount; i++)
+                {
+                    newArray[i] = _array[i];
+                }
+
+                _array = newArray;
+            }
         }
     }
 }

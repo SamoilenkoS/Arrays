@@ -22,13 +22,13 @@ namespace ArraysTests
         }
 
 
-        [TestCase(new[] { 1, 2, 3, 4})]
-        public void Add_WhenElementsByElementAdded_ShouldFillArray(int[] sourceArray)
+        [TestCase(new[] { 1, 2, 3, 4 })]
+        public void AddBack_WhenElementsByElementAdded_ShouldFillArray(int[] sourceArray)
         {
             ArrayList arrayList = new ArrayList();
             for (int i = 0; i < sourceArray.Length; i++)
             {
-                arrayList.Add(sourceArray[i]);
+                arrayList.AddBack(sourceArray[i]);
             }
 
             for (int i = 0; i < arrayList.Length; i++)
@@ -58,46 +58,104 @@ namespace ArraysTests
             Assert.AreEqual(expected, actual);
         }
 
-        [Test]
-        public void CastsExample()
+        [TestCase(new[] { 5, 3, 1, 2, 7 }, 1)]
+        [TestCase(new[] { 5 }, 5)]
+        [TestCase(new[] { 5, -5, 0 }, -5)]
+        public void Min_WhenArrayAdded_ShouldFindMinValue
+            (int[] sourceArray, int expected)
         {
-            PartialClass pk = new PartialClass();
-            ArrayList array = new ArrayList();
-            array.Add(3);
-            array.Add(5);
-            array.Add(4);
-            foreach (var t in array)
-            {
+            Initialize(sourceArray);
 
-            }
-            Animal a = new Cat(55, "Red");
-            Animal b = new Cat(44, "Red");
-            Animal c = new Dog(55, "Red");
-            var test = a.Equals(b);
-            var test2 = a.Equals(c);
+            int actual = _arrayList.Min();
 
-            Dog d = a as Dog;
+            Assert.AreEqual(expected, actual);
         }
 
-        [Test]
-        public void Main()
+        [TestCase(new[] { 5, 3, 1, 2, 7 }, 1, 2)]
+        [TestCase(new[] { 5 }, 5, 0)]
+        [TestCase(new[] { 5, -5, 0 }, -5, 1)]
+        [TestCase(new[] { 5, 5, 5 }, 5, 0)]
+        [TestCase(new[] { 5, -5, 0 }, 0, 2)]
+        [TestCase(new[] { 5, -5, 0 }, 10, -1)]
+        [TestCase(new int[] { }, 0, -1)]
+        public void IndexOf_WhenCalled_ShouldFindIndexOfElement
+            (int[] sourceArray, int searchValue, int expectedIndex)
         {
-            int a = 5;
-            a.IsOdd();
-            string hello = "Hello world test!";
-            var updated = hello.UpdateString();
-            AnimalCreator animalController = AnimalCreator.GetInstance();
-            var cat = animalController.CreateCat();
-            var dog = animalController.CreateDog();
-            Another();
+            Initialize(sourceArray);
+
+            int actualIndex = _arrayList.IndexOf(searchValue);
+
+            Assert.AreEqual(expectedIndex, actualIndex);
+        }
+
+        [TestCase(
+            new[] { 1, 2, 3, 4, 5 },
+            new[] { 6, 7, 8 },
+            new[] { 1, 2, 3, 4, 5, 6, 7, 8 })]
+        public void AddBack_WhenArrayAdded_ShouldAddArrayElementsToEnd(
+            int[] sourceArray,
+            int[] arrayToAdd,
+            int[] expectedArray)
+        {
+            Initialize(sourceArray);
+
+            _arrayList.AddBack(new ArrayList(arrayToAdd));
+
+            Assert.AreEqual(expectedArray, _arrayList.ToArray());
+        }
+
+        [TestCase(new int[] { },
+            1,
+            new[] { 1 })]
+        [TestCase(new int[] { 1, 2, 3 },
+            4,
+            new[] { 4, 1, 2, 3 })]
+        [TestCase(new int[] { 1, 2, 3, 4 },
+            5,
+            new[] { 5, 1, 2, 3, 4 })]
+        [TestCase(new int[] { 1, 2, 3, 4, 5 },
+            6,
+            new[] { 6, 1, 2, 3, 4, 5 })]
+        public void AddFront_WhenElementAdded_ShouldAddElementToFront(
+            int[] sourceArray,
+            int elementToAdd,
+            int[] expectedArray)
+        {
+            Initialize(sourceArray);
+
+            _arrayList.AddFront(elementToAdd);
+
+            Assert.AreEqual(expectedArray, _arrayList.ToArray());
         }
 
 
-        public void Another()
+        [TestCase(new int[] { },
+            1,
+            0,
+            new[] { 1 })]
+        [TestCase(new int[] { 1, 2, 3 },
+            4,
+            1,
+            new[] { 1, 4, 2, 3 })]
+        [TestCase(new int[] { 1, 2, 3, 4 },
+            5,
+            4,
+            new[] { 1, 2, 3, 4, 5 })]
+        [TestCase(new int[] { 1, 2, 3, 4, 5 },
+            6,
+            0,
+            new[] { 6, 1, 2, 3, 4, 5 })]
+        public void AddByIndex_WhenElementAdded_ShouldAddElementToIndexPosition(
+            int[] sourceArray,
+            int elementToAdd,
+            int index,
+            int[] expectedArray)
         {
-            AnimalCreator animalController = AnimalCreator.GetInstance();
-            var cat = animalController.CreateCat();
-            var dog = animalController.CreateDog();
+            Initialize(sourceArray);
+
+            _arrayList.AddByIndex(index, elementToAdd);
+
+            Assert.AreEqual(expectedArray, _arrayList.ToArray());
         }
     }
 }

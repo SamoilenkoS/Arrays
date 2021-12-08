@@ -43,5 +43,6 @@ namespace ArraysLibrary
         void AddFront(IArrayList arrayList);
         void AddBack(IArrayList arrayList);
         void AddByIndex(int index, IArrayList arrayList);//14
+        int[] ToArray();
     }
 }
